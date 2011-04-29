@@ -26,6 +26,8 @@
 #include	"clock.h"
 #include	"config_wrapper.h"
 #include	"home.h"
+#include "sd.h"
+
 
 /// the current tool
 uint8_t tool;
@@ -372,6 +374,57 @@ void process_gcode_command() {
 				//? Undocumented.
 				tool = next_tool;
 				break;
+
+      #ifdef SD
+      case 21:
+        //? --- M21: initialise SD card ---
+        if (pf_mount(&sdfile) == FR_OK) {
+          sdflags = SDFLAG_MOUNTED;
+        }
+        else {
+          sdflags = 0;
+          sersendf_P(PSTR("E: SD init failed"));
+        }
+        break;
+
+      case 22:
+        //? --- M22: release SD card ---
+        // Note: there is no pf_close(), because none is needed.
+        sdflags = 0;
+        break;
+
+      case 23:
+        //? --- M23: select file ---
+
+        if (sdflags & SDFLAG_MOUNTED) {
+          // Filename should be already in sdbuffer.
+          if (pf_open((char *)sdbuffer) == FR_OK) {
+            sdflags |= SDFLAG_FILE_SELECTED;
+          }
+          else {
+            sersendf_P(PSTR("E: failed to open file"));
+          }
+        }
+        else {
+          sersendf_P(PSTR("E: no SD card"));
+        }
+        break;
+
+      case 24:
+        //? --- M24: start/resume print ---
+        if (sdflags & SDFLAG_FILE_SELECTED) {
+          sdflags |= SDFLAG_READING;
+        }
+        else {
+          sersendf_P(PSTR("E: no SD card"));
+        }
+        break;
+
+      case 25:
+        //? --- M25: pause print ---
+        sdflags &= ~SDFLAG_READING;
+        break;
+      #endif /* SD */
 
 			case 82:
 				//? --- M82 - Set E codes absolute ---

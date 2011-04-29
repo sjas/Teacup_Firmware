@@ -12,11 +12,13 @@
 #include	"debug.h"
 #include	"heater.h"
 #include	"sersendf.h"
+#include "sd.h"
 
 #include	"gcode_process.h"
 #ifdef SIMULATOR
   #include "simulator.h"
 #endif
+
 
 /// current or previous gcode word
 /// for working out what to do with data just received
@@ -117,6 +119,13 @@ void gcode_parse_char(uint8_t c) {
 					break;
 				case 'M':
 					next_target.M = read_digit.mantissa;
+          #ifdef SD
+            if (next_target.M == 23) {
+              // SD card command with a filename.
+              sdflags |= SDFLAG_GET_FILENAME;
+              sdbufptr = 0;
+            }
+          #endif /* SD */
 					if (DEBUG_ECHO && (debug_flags & DEBUG_ECHO))
 						serwrite_uint8(next_target.M);
 					break;
@@ -203,7 +212,11 @@ void gcode_parse_char(uint8_t c) {
 	}
 
 	// skip comments
-	if (next_target.seen_semi_comment == 0 && next_target.seen_parens_comment == 0) {
+  if (next_target.seen_semi_comment == 0 && next_target.seen_parens_comment == 0
+    #ifdef SD
+      && ((sdflags & SDFLAG_GET_FILENAME) == 0)
+    #endif
+    ) {
 		// new field?
 		if ((c >= 'A' && c <= 'Z') || c == '*') {
 			last_field = c;
@@ -313,6 +326,16 @@ void gcode_parse_char(uint8_t c) {
 		}
 	} else if ( next_target.seen_parens_comment == 1 && c == ')')
 		next_target.seen_parens_comment = 0; // recognize stuff after a (comment)
+  #ifdef SD
+    // Store received filename into sdbuffer, use it in gcode_process().
+    else if (sdflags & SDFLAG_GET_FILENAME) {
+      if (c > 32) {
+        sdbuffer[sdbufptr] = c;
+        sdbufptr++;
+        sdbuffer[sdbufptr] = 0;
+      }
+    }
+  #endif /* SD */
 
 	if (next_target.seen_checksum == 0)
 		next_target.checksum_calculated =

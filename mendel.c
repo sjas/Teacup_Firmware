@@ -49,6 +49,7 @@
 #include	"clock.h"
 #include	"intercom.h"
 #include "simulator.h"
+#include "sd.h"
 
 #ifdef SIMINFO
   #include "../simulavr/src/simulavr_info.h"
@@ -61,6 +62,7 @@
 #ifdef CANNED_CYCLE
   const char PROGMEM canned_gcode_P[] = CANNED_CYCLE;
 #endif
+
 
 /// initialise all I/O - set pins as input or output, turn off unused subsystems, etc
 void io_init(void) {
@@ -222,6 +224,10 @@ void init(void) {
 	// set up temperature inputs
 	temp_init();
 
+  #ifdef SD
+    sd_init();
+  #endif
+
 	// enable interrupts
 	sei();
 
@@ -247,6 +253,8 @@ int main (int argc, char** argv)
 int main (void)
 {
 #endif
+  uint8_t c;
+
 	init();
 
 	// main loop
@@ -255,9 +263,27 @@ int main (void)
 		// if queue is full, no point in reading chars- host will just have to wait
     if (queue_full() == 0) {
       if (serial_rxchars() != 0) {
-        uint8_t c = serial_popchar();
+        c = serial_popchar();
         gcode_parse_char(c);
       }
+
+      #ifdef SD
+        /**
+          Usually we're not in a hurry, because printing is always much slower
+          than reading a file, so we read only one character at a time, just
+          as we'd read from the serial line.
+        */
+        if (sdflags & SDFLAG_READING) {
+          UINT n; // ignored
+
+          if (pf_read(&c, 1, &n) == FR_OK) {
+            gcode_parse_char(c);
+          }
+          else {
+            sdflags &= ~SDFLAG_READING;
+          }
+        }
+      #endif /* SD */
 
       #ifdef CANNED_CYCLE
         /**
@@ -273,9 +299,6 @@ int main (void)
 
           This will take extra ram, and may be out of scope for the Teacup
           project.
-
-          If ever print-from-SD card is implemented, these changes may become
-          necessary.
         */
         static uint32_t canned_gcode_pos = 0;
 
