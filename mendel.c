@@ -58,7 +58,7 @@ LiquidCrystal lcd( 8, 9, 4, 5, 6, 7 );
 
 
 
-//#include "LiquidCrystal.h"
+
 #ifdef SIMINFO
   #include "../simulavr/src/simulavr_info.h"
   SIMINFO_DEVICE("atmega644");
