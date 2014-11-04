@@ -50,6 +50,15 @@
 #include	"intercom.h"
 #include "simulator.h"
 
+
+#include "LiquidCrystal.h"
+
+LiquidCrystal lcd( 8, 9, 4, 5, 6, 7 );
+
+
+
+
+//#include "LiquidCrystal.h"
 #ifdef SIMINFO
   #include "../simulavr/src/simulavr_info.h"
   SIMINFO_DEVICE("atmega644");
@@ -236,6 +245,10 @@ void init(void) {
 
 	// reset watchdog
 	wd_reset();
+        
+
+
+
 
   // prepare the power supply
   power_init();
