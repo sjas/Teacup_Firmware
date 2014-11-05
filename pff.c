@@ -883,6 +883,8 @@ FRESULT pf_read (
     void* buff,     /* Pointer to the read buffer (NULL:Forward data to the stream)*/
     UINT btr,       /* Number of bytes to read */
     UINT* br        /* Pointer to number of bytes read */
+// TODO: br is incompletely supported and pretty useless anyways, so it
+//       should be removed.
 )
 {
     DRESULT dr;
@@ -915,6 +917,7 @@ FRESULT pf_read (
             sect = clust2sect(fs->curr_clust);      /* Get current sector */
             if (!sect) ABORT(FR_DISK_ERR);
             fs->dsect = sect + cs;
+// TODO: *br should be updated here, right?
         }
         rcnt = 512 - (UINT)fs->fptr % 512;          /* Get partial sector data from sector buffer */
         if (rcnt > btr) rcnt = btr;
@@ -939,6 +942,8 @@ FRESULT pf_write (
     const void* buff,   /* Pointer to the data to be written */
     UINT btw,           /* Number of bytes to write (0:Finalize the current write operation) */
     UINT* bw            /* Pointer to number of bytes written */
+// TODO: bw is incompletely supported and pretty useless anyways, so it
+//       should be removed.
 )
 {
     CLUST clst;
@@ -981,6 +986,7 @@ FRESULT pf_write (
             fs->dsect = sect + cs;
             if (disk_writep(0, fs->dsect)) ABORT(FR_DISK_ERR);  /* Initiate a sector write operation */
             fs->flag |= FA__WIP;
+// TODO: *bw should be updated here, right?
         }
         wcnt = 512 - (UINT)fs->fptr % 512;          /* Number of bytes to write to the sector */
         if (wcnt > btw) wcnt = btw;
