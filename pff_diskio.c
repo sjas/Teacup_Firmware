@@ -14,9 +14,9 @@
     above.
 */
 
-#include "config_wrapper.h"
+#include "sd.h"
 
-#ifdef SD_CARD_SELECT_PIN
+#ifdef SD
 
 #include <stdlib.h>
 
@@ -396,4 +396,4 @@ DRESULT disk_writep(const BYTE* buff, DWORD sc) {
 }
 #endif /* _USE_WRITE */
 
-#endif /* SD_CARD_SELECT_PIN */
+#endif /* SD */

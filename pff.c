@@ -37,12 +37,12 @@
   - Moved integer.h content to the end of pff_conf.h, again, to avoid
     file name conflicts.
   - Changed former integer.h content to use fixed width types (int8_t, etc).
-  - Wrapped code in #ifdef SD_CARD_SELECT_PIN to compile it only when needed.
+  - Wrapped code in #ifdef SD to compile it only when needed.
 */
 
-#include "config_wrapper.h"
+#include "sd.h"
 
-#ifdef SD_CARD_SELECT_PIN
+#ifdef SD
 
 #include "pff.h"        /* Petit FatFs configurations and declarations */
 #include "pff_diskio.h" /* Declarations of low level disk I/O functions */
@@ -1134,4 +1134,4 @@ FRESULT pf_readdir (
 
 #endif /* _USE_DIR */
 
-#endif /* SD_CARD_SELECT_PIN */
+#endif /* SD */

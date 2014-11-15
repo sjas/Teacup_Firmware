@@ -181,7 +181,7 @@ void io_init(void) {
 		power_off();
 	#endif
 
-  #if defined TEMP_MAX6675 || defined SD_CARD_SELECT_PIN
+  #if defined TEMP_MAX6675 || defined SD
 		// setup SPI
 		WRITE(SCK, 0);				SET_OUTPUT(SCK);
 		WRITE(MOSI, 1);				SET_OUTPUT(MOSI);
