@@ -73,17 +73,16 @@ struct {
 	uint16_t					next_read_time; ///< how long until we can read this sensor again?
 } temp_sensors_runtime[NUM_TEMP_SENSORS];
 
-/// Set up temp sensors.
+/// set up temp sensors. Currently only the 'intercom' sensor needs initialisation.
 void temp_init() {
 	temp_sensor_t i;
 	for (i = 0; i < NUM_TEMP_SENSORS; i++) {
 		switch(temp_sensors[i].temp_type) {
-      #ifdef TEMP_MAX6675
-        case TT_MAX6675:
-          WRITE(SS, 1); // Turn sensor off.
-          SET_OUTPUT(SS);
-          // Intentionally no break, we might have more than one sensor type.
-      #endif
+		#ifdef	TEMP_MAX6675
+			// initialised when read
+/*			case TT_MAX6675:
+				break;*/
+		#endif
 
 		#ifdef	TEMP_THERMISTOR
 			// handled by analog_init()
@@ -97,18 +96,12 @@ void temp_init() {
 				break;*/
 		#endif
 
-      #ifdef TEMP_INTERCOM
-        case TT_INTERCOM:
-          // Enable the RS485 transceiver
-          SET_OUTPUT(RX_ENABLE_PIN);
-          SET_OUTPUT(TX_ENABLE_PIN);
-          WRITE(RX_ENABLE_PIN,0);
-          disable_transmit();
-
-          intercom_init();
-          send_temperature(0, 0);
-          // Intentionally no break.
-      #endif
+		#ifdef	TEMP_INTERCOM
+			case TT_INTERCOM:
+				intercom_init();
+				send_temperature(0, 0);
+				break;
+		#endif
 
 			default: /* prevent compiler warning */
 				break;
