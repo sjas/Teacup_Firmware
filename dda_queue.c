@@ -72,6 +72,16 @@ DDA *queue_current_movement() {
   return current;
 }
 
+uint8_t waiting_for_temp() {
+	uint8_t result;
+
+	ATOMIC_START
+	result = ((!queue_empty()) && movebuffer[mb_tail].waitfor_temp) ? 255:0;
+	ATOMIC_END
+
+	return result;
+}
+
 // -------------------------------------------------------
 // This is the one function called by the timer interrupt.
 // It calls a few other functions, though.

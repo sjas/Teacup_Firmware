@@ -89,8 +89,12 @@ static void clock_250ms(void) {
 			serial_writechar('\n');
 		}
 		// temperature
-		/*		if (temp_get_target())
-		temp_print();*/
+                #ifdef HEATER_EXTRUDER
+		if (waiting_for_temp() && !temp_achieved()) {
+			temp_print(TEMP_SENSOR_none);
+			serial_writechar('\n');
+		}
+                #endif
 	}
 	#ifdef	TEMP_INTERCOM
 	start_send();

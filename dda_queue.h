@@ -48,4 +48,5 @@ void queue_flush(void);
 // wait for queue to empty
 void queue_wait(void);
 
+uint8_t waiting_for_temp(void);
 #endif	/* _DDA_QUEUE */
