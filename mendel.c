@@ -68,9 +68,15 @@
 void io_init(void) {
 	// disable modules we don't use
 	#ifdef PRR
-		PRR = MASK(PRTWI) | MASK(PRADC) | MASK(PRSPI);
+		PRR = MASK(PRTWI) | MASK(PRADC);
+		#ifndef SD
+			PRR |= MASK(PRSPI);
+		#endif
 	#elif defined PRR0
-		PRR0 = MASK(PRTWI) | MASK(PRADC) | MASK(PRSPI);
+		PRR0 = MASK(PRTWI) | MASK(PRADC);
+		#ifndef SD
+			PRR0 |= MASK(PRSPI);
+		#endif
 		#if defined(PRUSART3)
 			// don't use USART2 or USART3- leave USART1 for GEN3 and derivatives
 			PRR1 |= MASK(PRUSART3) | MASK(PRUSART2);
