@@ -444,6 +444,7 @@ class BoardPanel(wx.Panel):
                              "File error", wx.OK + wx.ICON_ERROR)
       dlg.ShowModal()
       dlg.Destroy()
+
       return False
 
     self.configFile = path
