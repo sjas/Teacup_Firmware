@@ -302,6 +302,9 @@ class ConfigFrame(wx.Frame):
           else:
             self.message("Unable to parse include statement:\n%s" % ln,
                          "Config error")
+        else:
+          self.message("Unable to parse include statement:\n%s" % ln,
+                       "Config error")
 
     return pfile, bfile
 
