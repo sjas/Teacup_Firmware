@@ -1,17 +1,15 @@
-
 import wx
-
 
 class HeaterList(wx.ListCtrl):
   def __init__(self, parent, font):
     self.parent = parent
     self.currentItem = None
-    wx.ListCtrl.__init__(self, parent, wx.ID_ANY,
-                         size = (95 + 55 + 55 + 4, 100),
-                         style = wx.LC_REPORT | wx.LC_VIRTUAL | wx.LC_HRULES |
-                         wx.LC_VRULES)
+    wx.ListCtrl.__init__(
+      self, parent, wx.ID_ANY, size = (95 + 55 + 55 + 4, 100),
+      style = wx.LC_REPORT | wx.LC_VIRTUAL | wx.LC_HRULES |
+            wx.LC_VRULES)
     self.SetFont(font)
-
+    
     self.valid = []
     self.heaterList = []
 
@@ -31,7 +29,7 @@ class HeaterList(wx.ListCtrl):
 
     self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected)
     self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnItemDeselected)
-
+    
   def updateList(self, heaterList):
     self.heaterList = heaterList
     self.valid = [True] * len(heaterList)
@@ -41,16 +39,16 @@ class HeaterList(wx.ListCtrl):
     while i != -1:
       self.Select(i, False)
       i = self.GetFirstSelected()
-
+      
     self.SetItemCount(len(heaterList))
-
+    
   def setRowValidity(self, i, flag = False):
     if i < 0 or i >= len(self.heaterList):
       return
-
+    
     self.valid[i] = flag
     self.Refresh()
-
+    
   def setTableValidity(self, flag = False):
     for i in range(len(self.heaterList)):
       self.setRowValidity(i, flag)
@@ -58,7 +56,7 @@ class HeaterList(wx.ListCtrl):
   def OnItemSelected(self, event):
     self.currentItem = event.m_itemIndex
     self.parent.setItemSelected(self.currentItem)
-
+    
   def OnItemDeselected(self, event):
     self.currentItem = None
     self.parent.setItemSelected(None)
@@ -70,9 +68,9 @@ class HeaterList(wx.ListCtrl):
   def OnGetItemText(self, item, col):
     if item < 0 or item >= len(self.heaterList):
       return "Error - no heaters"
-
+    
     s = self.heaterList[item]
-
+    
     if col == 0:
       return s[0]
     elif col == 1:
@@ -86,7 +84,7 @@ class HeaterList(wx.ListCtrl):
   def OnGetItemAttr(self, item):
     if not self.valid[item]:
       return self.attr3
-
+    
     if item % 2 == 1:
       return self.attr2
     else:

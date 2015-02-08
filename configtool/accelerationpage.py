@@ -1,7 +1,5 @@
-
 import wx
 from configtool.page import Page
-
 
 class AccelerationPage(wx.Panel, Page):
   def __init__(self, parent, nb, idPg, font):
@@ -10,72 +8,67 @@ class AccelerationPage(wx.Panel, Page):
     self.parent = parent
     self.id = idPg
 
-    self.accTypeKeys = ['ACCELERATION_REPRAP', 'ACCELERATION_RAMPING',
-                        'ACCELERATION_TEMPORAL']
+    self.accTypeKeys = ['ACCELERATION_REPRAP', 'ACCELERATION_RAMPING', 'ACCELERATION_TEMPORAL']
     self.jerkKeys = ['MAX_JERK_X', 'MAX_JERK_Y', 'MAX_JERK_Z', 'MAX_JERK_E']
 
-    self.labels = {'ACCELERATION_REPRAP': "RepRap",
-                   'ACCELERATION_RAMPING': "Ramping",
-                   'ACCELERATION_TEMPORAL': "Temporal",
-                   'ACCELERATION': "Acceleration:",
-                   'LOOKAHEAD': "Look Ahead",
-                   'MAX_JERK_X': "X:", 'MAX_JERK_Y': "Y:", 'MAX_JERK_Z': "Z:",
-                   'MAX_JERK_E': "E:"}
+    self.labels = {'ACCELERATION_REPRAP': "RepRap", 'ACCELERATION_RAMPING': "Ramping", 'ACCELERATION_TEMPORAL': "Temporal",
+                   'ACCELERATION': "Acceleration:", 'LOOKAHEAD': "Look Ahead",
+                   'MAX_JERK_X': "X:", 'MAX_JERK_Y': "Y:", 'MAX_JERK_Z': "Z:", 'MAX_JERK_E': "E:"}
 
     sz = wx.GridBagSizer()
-    sz.AddSpacer((20, 40), pos = (0, 0))
+    sz.AddSpacer((20,40), pos = (0, 0))
     b = wx.StaticBox(self, wx.ID_ANY, "Acceleration Type")
     b.SetFont(font)
     sbox = wx.StaticBoxSizer(b, wx.VERTICAL)
-    sbox.AddSpacer((5, 5))
+    sbox.AddSpacer((5,5))
     style = wx.RB_GROUP
     for k in self.accTypeKeys:
       rb = self.addRadioButton(k, style, self.onAccTypeSelect)
       style = 0
 
       sbox.Add(rb, 1, wx.LEFT + wx.RIGHT, 16)
-      sbox.AddSpacer((5, 5))
+      sbox.AddSpacer((5,5))
 
     self.rbNone = wx.RadioButton(self, wx.ID_ANY, "None", style = style)
     self.rbNone.SetFont(font)
     self.rbNone.SetValue(True)
     self.Bind(wx.EVT_RADIOBUTTON, self.onAccTypeSelect, self.rbNone)
     sbox.Add(self.rbNone, 1, wx.LEFT + wx.RIGHT, 16)
-    sbox.AddSpacer((5, 5))
+    sbox.AddSpacer((5,5))
     sz.Add(sbox, pos = (1, 1))
 
     b = wx.StaticBox(self, wx.ID_ANY, "Ramping Parameters")
     b.SetFont(font)
     sbox = wx.StaticBoxSizer(b, wx.VERTICAL)
-    sbox.AddSpacer((5, 5))
+    sbox.AddSpacer((5,5))
 
     k = 'ACCELERATION'
     tc = self.addTextCtrl(k, 80, self.onTextCtrlFloat)
     self.textControls[k].Enable(False)
 
     sbox.Add(tc)
-    sbox.AddSpacer((5, 5))
+    sbox.AddSpacer((5,5))
 
     k = 'LOOKAHEAD'
     cb = self.addCheckBox(k, self.onCheckBox)
     self.checkBoxes[k].Enable(False)
 
     sbox.Add(cb, 1, wx.ALIGN_CENTER_HORIZONTAL)
-    sbox.AddSpacer((5, 5))
+    sbox.AddSpacer((5,5))
 
     sz.Add(sbox, pos = (1, 3))
 
     b = wx.StaticBox(self, wx.ID_ANY, "Maximum Jerk")
     b.SetFont(font)
     sbox = wx.StaticBoxSizer(b, wx.VERTICAL)
-    sbox.AddSpacer((5, 5))
+    sbox.AddSpacer((5,5))
     for k in self.jerkKeys:
       tc = self.addTextCtrl(k, 40, self.onTextCtrlInteger)
 
       sbox.Add(tc)
-      sbox.AddSpacer((5, 5))
+      sbox.AddSpacer((5,5))
 
-    sz.AddSpacer((80, 20), pos = (1, 4))
+    sz.AddSpacer((80,20), pos = (1, 4))
     sz.Add(sbox, pos = (1, 5))
 
     self.SetSizer(sz)
@@ -126,3 +119,4 @@ class AccelerationPage(wx.Panel, Page):
     else:
       self.checkBoxes[k].SetValue(False)
     self.assertModified(False)
+

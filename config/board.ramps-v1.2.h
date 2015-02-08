@@ -15,7 +15,7 @@
 /** \def CPU
   CPU actually present on the board.
 */
-#define CPU atmega2560
+#define CPU                      atmega2560
 
 /** \def F_CPU_OPT
   CPU clock frequencies a user should be able to choose from in configtool.
@@ -27,7 +27,7 @@
   Actual CPU clock rate. #ifndef required for Arduino compatibility.
 */
 #ifndef F_CPU
-  #define F_CPU                  16000000UL
+#define F_CPU                    16000000UL
 #endif
 
 /** \def MOTHERBOARD
@@ -45,39 +45,39 @@
 
 #include "../arduino.h"
 
-#define X_STEP_PIN               DIO54
-#define X_DIR_PIN                DIO55
+#define X_STEP_PIN               DIO26
+#define X_DIR_PIN                DIO28
 #define X_MIN_PIN                DIO3
-//#define X_MAX_PIN                DIO2
-#define X_ENABLE_PIN             DIO38
+#define X_MAX_PIN                DIO2
+#define X_ENABLE_PIN             DIO24
 //#define X_INVERT_DIR
 //#define X_INVERT_MIN
 //#define X_INVERT_MAX
 #define X_INVERT_ENABLE
 
-#define Y_STEP_PIN               DIO60
-#define Y_DIR_PIN                DIO61
-#define Y_MIN_PIN                DIO14
-//#define Y_MAX_PIN                DIO15
-#define Y_ENABLE_PIN             DIO56
+#define Y_STEP_PIN               DIO38
+#define Y_DIR_PIN                DIO40
+#define Y_MIN_PIN                DIO16
+#define Y_MAX_PIN                DIO17
+#define Y_ENABLE_PIN             DIO36
 //#define Y_INVERT_DIR
 //#define Y_INVERT_MIN
 //#define Y_INVERT_MAX
 #define Y_INVERT_ENABLE
 
-#define Z_STEP_PIN               DIO46
-#define Z_DIR_PIN                DIO48
+#define Z_STEP_PIN               DIO44
+#define Z_DIR_PIN                DIO46
 #define Z_MIN_PIN                DIO18
-//#define Z_MAX_PIN                DIO19
-#define Z_ENABLE_PIN             AIO8
+#define Z_MAX_PIN                DIO19
+#define Z_ENABLE_PIN             DIO42
 //#define Z_INVERT_DIR
 //#define Z_INVERT_MIN
 //#define Z_INVERT_MAX
 #define Z_INVERT_ENABLE
 
-#define E_STEP_PIN               DIO26
-#define E_DIR_PIN                DIO28
-#define E_ENABLE_PIN             DIO24
+#define E_STEP_PIN               DIO32
+#define E_DIR_PIN                DIO34
+#define E_ENABLE_PIN             DIO30
 //#define E_INVERT_DIR
 #define E_INVERT_ENABLE
 
@@ -124,9 +124,8 @@
   Temperature sensor pins a user should be able to choose from in configtool.
   All commented out.
 */
-//#define TEMP_SENSOR_PIN AIO13
-//#define TEMP_SENSOR_PIN AIO14
-//#define TEMP_SENSOR_PIN AIO15
+//#define TEMP_SENSOR_PIN AIO1
+//#define TEMP_SENSOR_PIN AIO2
 
 /** \def DEFINE_TEMP_SENSOR
   Define your temperature sensors here. One line for each sensor, only
@@ -145,8 +144,8 @@
 */
 //                 name       type            pin    additional
 //DEFINE_TEMP_SENSORS_START
-DEFINE_TEMP_SENSOR(extruder,  TT_THERMISTOR,  AIO13, THERMISTOR_EXTRUDER)
-DEFINE_TEMP_SENSOR(bed,       TT_THERMISTOR,  AIO14, THERMISTOR_BED)
+DEFINE_TEMP_SENSOR(extruder, TT_THERMISTOR, AIO2, THERMISTOR_EXTRUDER)
+DEFINE_TEMP_SENSOR(bed, TT_THERMISTOR, AIO1, THERMISTOR_BED)
 //DEFINE_TEMP_SENSORS_END
 
 
@@ -168,7 +167,6 @@ DEFINE_TEMP_SENSOR(bed,       TT_THERMISTOR,  AIO14, THERMISTOR_BED)
 //#define HEATER_PIN DIO9
 //#define HEATER_PIN DIO8
 //#define HEATER_PIN DIO5
-//#define HEATER_PIN DIO4
 
 /** \def DEFINE_HEATER
   Define your heaters and devices here.
@@ -200,8 +198,8 @@ DEFINE_TEMP_SENSOR(bed,       TT_THERMISTOR,  AIO14, THERMISTOR_BED)
 //            name      port   pwm
 //DEFINE_HEATERS_START
 DEFINE_HEATER(extruder, DIO10, 1)
-DEFINE_HEATER(bed,      DIO8,  1)
-DEFINE_HEATER(fan,      DIO9,  1)
+DEFINE_HEATER(bed, DIO8, 1)
+DEFINE_HEATER(fan, DIO9, 1)
 
 #define HEATER_EXTRUDER HEATER_extruder
 #define HEATER_BED HEATER_bed

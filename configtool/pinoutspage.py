@@ -1,8 +1,6 @@
-
 import wx
 from configtool.page import Page
 from configtool.data import pinNames
-
 
 class PinoutsPage(wx.Panel, Page):
   def __init__(self, parent, nb, idPg, font):
@@ -12,20 +10,20 @@ class PinoutsPage(wx.Panel, Page):
     self.id = idPg
 
     pinXkeys = [('X_STEP_PIN', 2), ('X_DIR_PIN', 2), ('X_MIN_PIN', 2),
-                ('X_MAX_PIN', 2), ('X_ENABLE_PIN', 2), ('X_INVERT_DIR', 1),
-                ('X_INVERT_MIN', 1), ('X_INVERT_MAX', 1),
+                ('X_MAX_PIN', 2), ('X_ENABLE_PIN', 2),
+                ('X_INVERT_DIR', 1), ('X_INVERT_MIN', 1), ('X_INVERT_MAX', 1),
                 ('X_INVERT_ENABLE', 1)]
     pinYkeys = [('Y_STEP_PIN', 2), ('Y_DIR_PIN', 2), ('Y_MIN_PIN', 2),
-                ('Y_MAX_PIN', 2), ('Y_ENABLE_PIN', 2), ('Y_INVERT_DIR', 1),
-                ('Y_INVERT_MIN', 1), ('Y_INVERT_MAX', 1),
+                ('Y_MAX_PIN', 2), ('Y_ENABLE_PIN', 2),
+                ('Y_INVERT_DIR', 1), ('Y_INVERT_MIN', 1), ('Y_INVERT_MAX', 1),
                 ('Y_INVERT_ENABLE', 1)]
     pinZkeys = [('Z_STEP_PIN', 2), ('Z_DIR_PIN', 2), ('Z_MIN_PIN', 2),
-                ('Z_MAX_PIN', 2), ('Z_ENABLE_PIN', 2), ('Z_INVERT_DIR', 1),
-                ('Z_INVERT_MIN', 1), ('Z_INVERT_MAX', 1),
+                ('Z_MAX_PIN', 2), ('Z_ENABLE_PIN', 2),
+                ('Z_INVERT_DIR', 1), ('Z_INVERT_MIN', 1), ('Z_INVERT_MAX', 1),
                 ('Z_INVERT_ENABLE', 1)]
     pinEkeys = [('E_STEP_PIN', 2), ('E_DIR_PIN', 2), ('E_ENABLE_PIN', 2),
                 ('E_INVERT_DIR', 1), ('E_INVERT_ENABLE', 1)]
-
+    
     self.labels = {'X_STEP_PIN': "Step Pin:", 'X_DIR_PIN': "Direction Pin:",
                    'X_MIN_PIN': "Minimum Pin:", 'X_MAX_PIN': "Maximum Pin:",
                    'X_ENABLE_PIN': "Enable Pin:",
@@ -64,10 +62,10 @@ class PinoutsPage(wx.Panel, Page):
                    'DEBUG_LED_PIN': "Debug LED Pin:"}
 
     labelWidth = 120
-
+    
     sz = wx.GridBagSizer()
     sz.AddSpacer((10, 10), pos = (0, 0))
-
+  
     b = wx.StaticBox(self, wx.ID_ANY, "X Axis")
     b.SetFont(font)
     sbox = wx.StaticBoxSizer(b, wx.VERTICAL)
@@ -84,9 +82,9 @@ class PinoutsPage(wx.Panel, Page):
         sbox.Add(cb, 1, wx.LEFT, 30)
 
       sbox.AddSpacer((5, 5))
-
-    sz.Add(sbox, pos = (1, 1))
-
+      
+    sz.Add(sbox, pos= (1, 1))
+    
     b = wx.StaticBox(self, wx.ID_ANY, "Y Axis")
     b.SetFont(font)
     sbox = wx.StaticBoxSizer(b, wx.VERTICAL)
@@ -103,9 +101,9 @@ class PinoutsPage(wx.Panel, Page):
         sbox.Add(cb, 1, wx.LEFT, 30)
 
       sbox.AddSpacer((5, 5))
-
+      
     sz.Add(sbox, pos = (1, 3))
-
+    
     b = wx.StaticBox(self, wx.ID_ANY, "Z Axis")
     b.SetFont(font)
     sbox = wx.StaticBoxSizer(b, wx.VERTICAL)
@@ -122,9 +120,9 @@ class PinoutsPage(wx.Panel, Page):
         sbox.Add(cb, 1, wx.LEFT, 30)
 
       sbox.AddSpacer((5, 5))
-
+      
     sz.Add(sbox, pos = (1, 5))
-
+    
     b = wx.StaticBox(self, wx.ID_ANY, "E Axis")
     b.SetFont(font)
     sbox = wx.StaticBoxSizer(b, wx.VERTICAL)
@@ -141,38 +139,38 @@ class PinoutsPage(wx.Panel, Page):
         sbox.Add(cb, 1, wx.LEFT, 30)
 
       sbox.AddSpacer((5, 5))
-
+      
     sz.Add(sbox, pos = (1, 7))
-
+    
     k = "STEPPER_ENABLE_PIN"
-    tc = self.addPinChoice(k, "", pinNames, True, labelWidth + 20)
+    tc = self.addPinChoice(k, "", pinNames, True, labelWidth+20)
     sz.Add(tc, pos = (3, 1))
-
-    sz.AddSpacer((10, 10), pos = (4, 1))
-
+    
+    sz.AddSpacer((10,10), pos = (4, 1))
+    
     k = "STEPPER_INVERT_ENABLE"
     cb = self.addCheckBox(k, self.onCheckBox)
     sz.Add(cb, pos = (5, 1), flag = wx.ALIGN_CENTER_HORIZONTAL)
-
+  
     k = "PS_ON_PIN"
     tc = self.addPinChoice(k, "", pinNames, True, labelWidth)
     sz.Add(tc, pos = (3, 3))
-
+    
     k = "PS_MOSFET_PIN"
     tc = self.addPinChoice(k, "", pinNames, True, labelWidth)
     sz.Add(tc, pos = (5, 3))
-
+    
     k = "DEBUG_LED_PIN"
     tc = self.addPinChoice(k, "", pinNames, True, labelWidth)
     sz.Add(tc, pos = (3, 7))
-
+    
     self.SetSizer(sz)
     self.enableAll(False)
-
+    
   def onChoice(self, evt):
     self.assertModified(True)
     evt.Skip()
-
+  
   def insertValues(self, cfgValues):
     self.assertValid(True)
     self.enableAll(True)
@@ -183,23 +181,23 @@ class PinoutsPage(wx.Panel, Page):
         self.textControls[k].SetValue(cfgValues[k])
       else:
         self.textControls[k].SetValue("")
-
+        
     for k in self.checkBoxes.keys():
       if k in cfgValues.keys() and cfgValues[k]:
         self.checkBoxes[k].SetValue(True)
       else:
         self.checkBoxes[k].SetValue(False)
-
+        
     for k in self.choices.keys():
       self.setChoice(k, cfgValues, "-")
-
+      
     self.assertModified(False)
-
+    
   def getValues(self):
     result = Page.getValues(self)
-
+    
     for k in self.choices.keys():
       if k in result.keys() and result[k] == "-":
         result[k] = ""
-
+    
     return result

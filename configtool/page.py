@@ -1,8 +1,6 @@
-
 import wx
 
-from configtool.data import reInteger, reFloat
-
+from configtool.data import reInteger, reFloat, offsetChLabel, offsetTcLabel
 
 class Page:
   def __init__(self, font):
@@ -15,7 +13,7 @@ class Page:
     self.choices = {}
     self.font = font
 
-
+    
   def enableAll(self, flag = True):
     for c in self.textControls.keys():
       self.textControls[c].Enable(flag)
@@ -29,10 +27,10 @@ class Page:
   def addTextCtrl(self, name, labelWidth, validator):
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, self.labels[name] + " ",
-                       size = (labelWidth, -1), style = wx.ALIGN_RIGHT)
+        size = (labelWidth, -1), style = wx.ALIGN_RIGHT)
     st.SetFont(self.font)
-    lsz.Add(st)
-
+    lsz.Add(st, 1, wx.TOP, offsetTcLabel)
+    
     tc = wx.TextCtrl(self, wx.ID_ANY, "", style = wx.TE_RIGHT, name = name)
     tc.SetFont(self.font)
     self.fieldValid[name] = True
@@ -41,7 +39,7 @@ class Page:
     lsz.Add(tc)
 
     return lsz
-
+  
   def addCheckBox(self, name, validator):
     if name in self.labels.keys():
       lbl = self.labels[name]
@@ -51,7 +49,7 @@ class Page:
     cb.SetFont(self.font)
     cb.Bind(wx.EVT_CHECKBOX, validator)
     self.checkBoxes[name] = cb
-
+    
     return cb
 
   def addRadioButton(self, name, style, validator):
@@ -63,13 +61,13 @@ class Page:
     return rb
 
   def addChoice(self, name, choices, selection, labelWidth, validator,
-                size = (-1, -1)):
+          size = (-1, -1)):
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, self.labels[name],
-                       size = (labelWidth, -1), style = wx.ALIGN_RIGHT)
+          size = (labelWidth, -1), style = wx.ALIGN_RIGHT)
     st.SetFont(self.font)
-    lsz.Add(st)
-
+    lsz.Add(st, 1, wx.TOP, offsetChLabel)
+    
     ch = wx.Choice(self, wx.ID_ANY, choices = choices, size = size, name = name)
     ch.SetFont(self.font)
     ch.Bind(wx.EVT_CHOICE, validator)
@@ -78,21 +76,21 @@ class Page:
     self.choices[name] = ch
 
     return lsz
-
+  
   def addPinChoice(self, name, choiceVal, pins, allowBlank , labelWidth):
     lsz = wx.BoxSizer(wx.HORIZONTAL)
     st = wx.StaticText(self, wx.ID_ANY, self.labels[name],
-                       size = (labelWidth, -1), style = wx.ALIGN_RIGHT)
+          size = (labelWidth, -1), style = wx.ALIGN_RIGHT)
     st.SetFont(self.font)
-    lsz.Add(st)
-
+    lsz.Add(st, 1, wx.TOP, offsetChLabel)
+    
     if allowBlank:
       opts = ["-"] + pins
     else:
       opts = pins
-
+    
     ch = wx.Choice(self, wx.ID_ANY, choices = opts, name = name,
-                   style = wx.CB_SORT)
+          style = wx.CB_SORT)
     ch.SetFont(self.font)
     ch.Bind(wx.EVT_CHOICE, self.onChoice)
     self.choices[name] = ch
@@ -104,7 +102,7 @@ class Page:
     lsz.Add(ch)
 
     return lsz
-
+  
   def setChoice(self, name, cfgValues, default):
     if name in cfgValues.keys():
       bv = cfgValues[name]
@@ -116,9 +114,10 @@ class Page:
       s = self.choices[name].FindString(default)
       if s < 0:
         s = 0
-
+        
     self.choices[name].SetSelection(s)
 
+    
   def onTextCtrlInteger(self, evt):
     self.assertModified(True)
     tc = evt.GetEventObject()
@@ -132,16 +131,16 @@ class Page:
         valid = True
       else:
         valid = False
-
+        
     self.setFieldValidity(name, valid)
-
+        
     if valid:
       tc.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
     else:
       tc.SetBackgroundColour("pink")
     tc.Refresh()
     evt.Skip()
-
+    
   def onTextCtrlFloat(self, evt):
     self.assertModified(True)
     tc = evt.GetEventObject()
@@ -155,34 +154,34 @@ class Page:
         valid = True
       else:
         valid = False
-
+        
     self.setFieldValidity(name, valid)
-
+        
     if valid:
       tc.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_WINDOW))
     else:
       tc.SetBackgroundColour("pink")
     tc.Refresh()
     evt.Skip()
-
+    
   def onTextCtrlPin(self, evt):
     self.assertModified(True)
     tc = evt.GetEventObject()
     self.validatePin(tc)
     evt.Skip()
-
+    
   def onTextCtrl(self, evt):
     self.assertModified(True)
     evt.Skip()
-
+    
   def onChoice(self, evt):
     self.assertModified(True)
     evt.Skip()
-
+    
   def onCheckBox(self, evt):
     self.assertModified(True)
     evt.Skip()
-
+    
   def setHelpText(self, ht):
     for k in self.textControls.keys():
       if k in ht.keys():
@@ -199,18 +198,18 @@ class Page:
     for k in self.choices.keys():
       if k in ht.keys():
         self.choices[k].SetToolTipString(ht[k])
-
+        
   def getValues(self):
     self.assertModified(False)
     result = {}
     for k in self.checkBoxes.keys():
       cb = self.checkBoxes[k]
       result[k] = cb.IsChecked()
-
+        
     for k in self.textControls.keys():
       v = self.textControls[k].GetValue()
       result[k] = v
-
+        
     for k in self.radioButtons.keys():
       result[k] = self.radioButtons[k].GetValue()
 
@@ -224,18 +223,18 @@ class Page:
     if flag != self.modified:
       self.parent.assertModified(self.id, flag)
       self.modified = flag
-
+      
   def setFieldValidity(self, name, flag):
     self.fieldValid[name] = flag
-
+    
     pgValid = True
     for k in self.fieldValid.keys():
       if not self.fieldValid[k]:
         pgValid = False
         break
-
+      
     self.assertValid(pgValid)
-
+      
   def assertValid(self, flag):
     if flag != self.valid:
       self.parent.assertValid(self.id, flag)

@@ -1,6 +1,5 @@
-
 import re
-
+from sys import platform
 
 supportedCPUs = ['ATmega168', 'ATmega328P', 'ATmega644', 'ATmega644P',
                  'ATmega644PA', 'ATmega1280', 'ATmega1284', 'ATmega1284P',
@@ -16,6 +15,13 @@ sensorTypes = {'MAX6675': "TT_MAX6675", 'Thermistor': "TT_THERMISTOR",
 BSIZE = (90, 60)
 BSIZESMALL = (90, 30)
 
+
+if platform == "win32":
+  offsetTcLabel = 4
+  offsetChLabel = 4
+else:
+  offsetTcLabel = 6
+  offsetChLabel = 8
 
 TYPE_GENERAL = 0
 TYPE_FLOAT = 1

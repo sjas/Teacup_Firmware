@@ -18,7 +18,7 @@
                         long and crossing toothed belts and a print head moving
                         on the X-Y-plane.
 */
-#define KINEMATICS               KINEMATICS_STRAIGHT
+#define KINEMATICS               KINEMATICS_COREXY
 
 /** \def STEPS_PER_M_X STEPS_PER_M_Y STEPS_PER_M_Z STEPS_PER_M_E
   Steps per meter ( = steps per mm * 1000 ), calculate these values
