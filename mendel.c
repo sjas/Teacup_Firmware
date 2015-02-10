@@ -270,7 +270,7 @@ int main (void)
     if (queue_full() == 0) {
       if (serial_rxchars() != 0) {
         c = serial_popchar();
-        gcode_parse_char(c);
+        gcode_parse_char(c,Parser_Uart);
       }
 
       #ifdef SD
@@ -283,7 +283,7 @@ int main (void)
           UINT n; // ignored
 
           if (pf_read(&c, 1, &n) == FR_OK) {
-            gcode_parse_char(c);
+            gcode_parse_char(c,Parser_SdCard);
           }
           else {
             sdflags &= ~SDFLAG_READING;
@@ -292,23 +292,9 @@ int main (void)
       #endif /* SD */
 
       #ifdef CANNED_CYCLE
-        /**
-          WARNING!
-
-          This code works on a per-character basis.
-
-          Any data received over serial WILL be randomly distributed through
-          the canned gcode, and you'll have a big mess!
-
-          The solution is to either store gcode parser state with each source,
-          or only parse a line at a time.
-
-          This will take extra ram, and may be out of scope for the Teacup
-          project.
-        */
         static uint32_t canned_gcode_pos = 0;
 
-        gcode_parse_char(pgm_read_byte(&(canned_gcode_P[canned_gcode_pos])));
+        gcode_parse_char(pgm_read_byte(&(canned_gcode_P[canned_gcode_pos])),Parser_Canned);
 
         canned_gcode_pos++;
         if (pgm_read_byte(&(canned_gcode_P[canned_gcode_pos])) == 0)

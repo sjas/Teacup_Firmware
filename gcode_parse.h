@@ -59,13 +59,22 @@ typedef struct {
 	uint8_t						checksum_calculated;	///< checksum we calculated
 } GCODE_COMMAND;
 
-/// the command being processed
-extern GCODE_COMMAND next_target;
+typedef enum ParserType {
+    Parser_Uart ,
+#ifdef SD
+    Parser_SdCard ,
+#endif
+#ifdef CANNED_CYCLE
+    Parser_Canned ,
+#endif
+
+    Parser_ListSize  // end of list; number of items in list
+} ParserType;
 
 void gcode_init(void);
 
 /// accept the next character and process it
-void gcode_parse_char(uint8_t c);
+void gcode_parse_char(uint8_t c,ParserType parser);
 
 // uses the global variable next_target.N
 void request_resend(void);

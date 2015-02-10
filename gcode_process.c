@@ -35,6 +35,9 @@ uint8_t tool;
 /// the tool to be changed when we get an M6
 uint8_t next_tool;
 
+/// this is where we store all the data for the current command
+GCODE_COMMAND BSS next_target;
+
 
 /************************************************************************//**
 
@@ -46,8 +49,14 @@ uint8_t next_tool;
 
 *//*************************************************************************/
 
-void process_gcode_command() {
+void process_gcode_command(const GCODE_COMMAND *cmd) {
 	uint32_t	backup_f;
+
+  // Copy command into global struct for general use
+  // FIXME: Instead of stupid memcpy here, we should "apply" the built-up command to the previous
+  // machine state by considering relative moves, previous feedrates, etc.  This is left as an
+  // exercise for someone who can test it.
+  memcpy(&next_target, cmd, sizeof(next_target));
 
 	// convert relative to absolute
 	if (next_target.option_all_relative) {
